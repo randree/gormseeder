@@ -45,7 +45,7 @@ func main() {
 		fmt.Println(err.Error())
 	}
 
-	gs.InitSeeder(db, "Seeders")
+	gs.InitSeeder(db, "seeders")
 }
 ```
 

@@ -1,33 +1,28 @@
 package main
 
 import (
-	gm "github.com/randree/gormigrator"
+	gs "github.com/randree/gormseeder"
 	"gorm.io/gorm"
 )
 
 func init() {
 
-	gm.Mig(gm.State{
+	gs.Seed(gs.State{
 
-		Tag: "customers",
+		Tag: "mock_products",
 
-		Up: func(db *gorm.DB) error {
-
-			type Customer struct {
-				ID   int `gorm:"primarykey"`
-				Name string
+		Perform: func(db *gorm.DB) error {
+			type Product struct {
+				ID   uint   `gorm:"primarykey"`
+				Name string `gorm:"size:255"`
+			}
+			err := db.AutoMigrate(&Product{})
+			if err != nil {
+				return err
 			}
 
-			db.AutoMigrate(&Customer{})
-
-			return db.Create(&Customer{
-				ID:   2009,
-				Name: "Cust1",
-			}).Error
-		},
-
-		Down: func(db *gorm.DB) error {
-			err := db.Migrator().DropTable("customers")
+			var product = []Product{{Name: "testprod1"}, {Name: "testprod2"}, {Name: "testprod3"}}
+			db.Create(&product)
 
 			return err
 		},

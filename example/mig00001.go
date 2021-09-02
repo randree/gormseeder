@@ -7,18 +7,23 @@ import (
 
 func init() {
 
-	type migtest struct {
-		ID    uint   `gorm:"primarykey,autoIncrement"`
-		Name  string `gorm:"size:255"`
-		Email string `gorm:"size:300"`
-	}
-
 	gs.Seed(gs.State{
 
-		Tag: "create_migtest",
+		Tag: "mock_users",
 
 		Perform: func(db *gorm.DB) error {
-			err := db.AutoMigrate(&migtest{})
+			type User struct {
+				ID   uint   `gorm:"primarykey"`
+				Name string `gorm:"size:255"`
+			}
+			err := db.AutoMigrate(&User{})
+			if err != nil {
+				return err
+			}
+
+			var users = []User{{Name: "testuser1"}, {Name: "testuser2"}, {Name: "testuser3"}}
+			db.Create(&users)
+
 			return err
 		},
 	})
