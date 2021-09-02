@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  database:
+    image: postgres:13.1-alpine
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: passpass
+
+  # With Adminer you can see what happens on the database
+  adminer:
+    image: adminer
+    user: 1000:1000
+    environment:
+      ADMINER_DESIGN: "pappu687"
+    depends_on:
+      - database
+    ports:
+      - 8081:8080
